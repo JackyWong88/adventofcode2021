@@ -11,41 +11,35 @@ foreach ($lines as $k=>$line) {
     $line = new Line($line);
     if ($line->isFlat()) {
         $flatLines[] = $line;
-        // print_r($line);
-        // array_walk_recursive($map, 'sumArray', $line->getArray());
+        // print_r($line)
         // print_r($line->getArray());
-        $map = sumArray2($map, $line->getArray(), $overlapCount);
+        $map = plotLine($map, $line->getArray(), $overlapCount);
     }
 }
-print_r($map);
+//print_r($map);
 
 echo ("Part 1: " . $overlapCount);
 echo "<br>";
 
+return;
 echo ("Part 2: " . $part2);
 echo "<br>";
 
-function sumArray($item, $key, $array) {
-    foreach ($array as $row=>$value) {
-        if (is_array($value)) {
-            foreach ($value as $col=>$v) {
-                
-            }
-        }
-    }
-}
 
-function sumArray2($array1, $array2, &$overlapCount) {
-    foreach ($array2 as $day => $value) {
-        foreach ($value as $eat => $count) {
-            if (!isset($array1[$day][$eat])) $array1[$day][$eat] = 0;
-            $array1[$day][$eat] = $count + $array1[$day][$eat];
-            if ($array1[$day][$eat] == 2) {
+function plotLine($map, $lineArray, &$overlapCount) {
+    foreach ($lineArray as $rowIdx => $row) {
+        foreach ($row as $colIdx => $count) {
+            if (!isset($map[$rowIdx][$colIdx])) $map[$rowIdx][$colIdx] = 0;
+            $map[$rowIdx][$colIdx] = $count + $map[$rowIdx][$colIdx];
+
+            // determine overlap
+            if ($map[$rowIdx][$colIdx] == 2) {
                 $overlapCount++;
             }
         }
     }
-    return $array1;
+
+    return $map;
 }
 
 
@@ -76,16 +70,22 @@ class Line {
         $array = [];
         if ($this->isHorizontal === true) {
             // set the row index
-            $length = abs($this->startPoint->x - $this->endPoint->x);
-            $array[$this->startPoint->y] = array_fill($this->endPoint->x > $this->startPoint->x ? $this->startPoint->x : $this->endPoint->x, $length, 1);
-        } else {
+            $length = $this->getDistance();
+            $array[$this->startPoint->y] = array_fill($this->endPoint->x > $this->startPoint->x ? $this->startPoint->x : $this->endPoint->x, $length+1, 1);
+        } else if ($this->isVertical === true) {
             $length = abs($this->startPoint->y - $this->endPoint->y);
             $startY = $this->endPoint->y > $this->startPoint->y ? $this->startPoint->y : $this->endPoint->y;
             for ($i = $startY; $i <= $startY + $length; $i++) {
                 $array[$i][$this->startPoint->x] = 1;
             }
+        } else {
+
         }
         return $array;
+    }
+
+    public function getDistance() {
+        return sqrt(pow($this->startPoint->x - $this->endPoint->x, 2) + pow($this->startPoint->y - $this->endPoint->y, 2));
     }
 }
 
