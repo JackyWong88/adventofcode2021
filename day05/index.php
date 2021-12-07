@@ -4,8 +4,10 @@
 
 $lines = file("input", FILE_IGNORE_NEW_LINES);
 $flatLines = [];
-$map = [];
-$overlapCount = 0;
+$part1Map = [];
+$part2Map = [];
+$overlapCount1 = 0;
+$overlapCount2 = 0;
 
 foreach ($lines as $k=>$line) {
     $line = new Line($line);
@@ -13,16 +15,19 @@ foreach ($lines as $k=>$line) {
         $flatLines[] = $line;
         // print_r($line)
         // print_r($line->getArray());
-        $map = plotLine($map, $line->getArray(), $overlapCount);
+        $part1Map = plotLine($part1Map, $line->getArray(), $overlapCount1);
+    } else {
+//        print_r($line);
+//        print_r($line->getArray());
     }
+    $part2Map = plotLine($part2Map, $line->getArray(), $overlapCount2);
 }
-//print_r($map);
+//print_r($part2Map);
 
-echo ("Part 1: " . $overlapCount);
+echo ("Part 1: " . $overlapCount1);
 echo "<br>";
 
-return;
-echo ("Part 2: " . $part2);
+echo ("Part 2: " . $overlapCount2);
 echo "<br>";
 
 
@@ -91,8 +96,8 @@ class Line {
             $endY = $this->endPoint->y < $this->startPoint->y ? $this->startPoint->y : $this->endPoint->y;
 
             // plot the line
-            for ($i = $startY; $i <= $endY; $i++) {
-                $array[$i][$startX + ($i * $slope)] = 1;
+            for ($i = 0; $i <= ($endY - $startY); $i++) {
+                $array[$startY + $i][$startX + ($i * $slope)] = 1;
             }
 
             if (abs($ySlope/$xSlope) != 1) {
