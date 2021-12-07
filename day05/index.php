@@ -79,7 +79,23 @@ class Line {
                 $array[$i][$this->startPoint->x] = 1;
             }
         } else {
+            // these are diagonal lines
+            // figure slope
+            $ySlope = ($this->endPoint->y - $this->startPoint->y);
+            $xSlope =  ($this->endPoint->x - $this->startPoint->x);
+            $slope = $ySlope/$xSlope;
 
+            // figure start point
+            $startY = $this->endPoint->y > $this->startPoint->y ? $this->startPoint->y : $this->endPoint->y;
+
+            // plot the line
+            for ($i = $startY; $i <= $this->endPoint->y; $i++) {
+                $array[$i][$this->startPoint->x + ($i * $slope)] = 1;
+            }
+
+            if (abs($ySlope/$xSlope) != 1) {
+                var_dump("WTF");
+            }
         }
         return $array;
     }
