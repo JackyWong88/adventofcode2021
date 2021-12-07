@@ -87,10 +87,12 @@ class Line {
 
             // figure start point
             $startY = $this->endPoint->y > $this->startPoint->y ? $this->startPoint->y : $this->endPoint->y;
+            $startX = $this->endPoint->y > $this->startPoint->y ? $this->startPoint->x : $this->endPoint->x;
+            $endY = $this->endPoint->y < $this->startPoint->y ? $this->startPoint->y : $this->endPoint->y;
 
             // plot the line
-            for ($i = $startY; $i <= $this->endPoint->y; $i++) {
-                $array[$i][$this->startPoint->x + ($i * $slope)] = 1;
+            for ($i = $startY; $i <= $endY; $i++) {
+                $array[$i][$startX + ($i * $slope)] = 1;
             }
 
             if (abs($ySlope/$xSlope) != 1) {
